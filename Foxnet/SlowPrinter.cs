@@ -7,14 +7,9 @@ namespace PrincessRTFM.Hacknet.Foxnet;
 
 public class SlowPrinter {
 
-	public readonly struct DelayedLine {
-		public readonly double Delay;
-		public readonly string Text;
-
-		public DelayedLine(double d, string t) {
-			this.Delay = d;
-			this.Text = t;
-		}
+	public readonly struct DelayedLine(double d, string t) {
+		public readonly double Delay = d;
+		public readonly string Text = t;
 	}
 
 	internal static IEnumerator<ActionDelayer.Condition> CreateSlowPrinter(OS os, params DelayedLine[] lines) {

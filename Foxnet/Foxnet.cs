@@ -22,11 +22,11 @@ public class Foxnet: HacknetPlugin {
 
 	internal delegate void PluginCommandDelegate(OS os, string cmd, string[] args);
 
-	internal static readonly Dictionary<string, CommandData> commands = new();
+	internal static Dictionary<string, CommandBase> RegisteredCommands { get; private set; } = [];
 
-	private static readonly Dictionary<string, string> exeFileCache = new();
+	private static readonly Dictionary<string, string> exeFileCache = [];
 
-	private static readonly string[] snark = new[] {
+	private static readonly string[] snark = [
 		// WTNV
 		"Not everything with a human face is human.",
 		"Death is only the end if you assume the story is about you.",
@@ -67,101 +67,51 @@ public class Foxnet: HacknetPlugin {
 		"Friend Computer thanks you for your service.",
 		"Mine is the last voice you will ever hear.\nDo not be alarmed.",
 		"Have you taken your happiness pills today, Citizen?\nHappiness is mandatory!",
-	};
+	];
 
 	public static string Snark => snark[Utils.random.Next(0, snark.Length)];
 
 	public override bool Load() {
-		MethodInfo[] handlers = typeof(Commands)
-			.GetMethods(BindingFlags.Public | BindingFlags.Static)
-			.Where(mi => mi.GetCustomAttribute<CommandAttribute>() is not null)
-			.ToArray();
-
 		Console.WriteLine("Applying harmony patches");
 		this.HarmonyInstance.PatchAll(this.GetType().Assembly);
 
-		Console.WriteLine($"Registering {handlers.Length} custom game commands");
-		foreach (MethodInfo meth in handlers) {
+		Type cmdBase = typeof(CommandBase);
+		Assembly asm = cmdBase.Assembly;
+		CommandBase[] commands = asm
+			.GetTypes()
+			.Where(t => cmdBase.IsAssignableFrom(t) && !t.IsAbstract)
+			.Select(t => Activator.CreateInstance(t))
+			.Cast<CommandBase>()
+			.ToArray();
+
+		Console.WriteLine($"Registering {commands.Length} custom game commands");
+		foreach (CommandBase cmd in commands) {
+			//Console.WriteLine($"Registering custom command {cmd.Command} from {cmd.GetType().Name}");
 			try {
-				CommandAttribute attr = meth.GetCustomAttribute<CommandAttribute>();
-				string cmd = attr.Command;
+				CommandManager.RegisterCommand(cmd.Command, cmd.RedirectHacknetInvocation);
+				RegisteredCommands[cmd.Command.ToLower()] = cmd;
+			}
+			catch (NotImplementedException ex) {
+				Console.WriteLine($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
+			}
 
-				if (string.IsNullOrEmpty(cmd)) {
-					Console.WriteLine($"Skipping empty command for {meth.Name}");
-					continue;
-				}
-
-				Console.WriteLine($"Registering custom command {cmd}");
-
-				string[] alts = attr.Aliases;
-				string desc = meth.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "[n/a]";
-				ArgumentsAttribute help = meth.GetCustomAttribute<ArgumentsAttribute>();
-				PluginCommandDelegate exec = (PluginCommandDelegate)meth.CreateDelegate(typeof(PluginCommandDelegate));
-
-				commands[cmd.ToLower()] = new() {
-					PrettyName = cmd,
-					Description = desc,
-					Arguments = help,
-					Handler = exec,
-				};
-
-				try {
-					CommandManager.RegisterCommand(cmd, invokeCommand);
-				}
-				catch (NotImplementedException ex) {
-					Console.WriteLine($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
-				}
-
-				if (alts.Length > 0) {
-					foreach (string alt in alts) {
-						commands[alt.ToLower()] = commands[cmd.ToLower()];
-
-						Console.WriteLine($"Registering command alias {alt}");
-						try {
-							CommandManager.RegisterCommand(alt, invokeCommand);
-						}
-						catch (NotImplementedException ex) {
-							Console.WriteLine($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
-						}
+			string[] alts = cmd.Aliases;
+			if (alts.Length > 0) {
+				foreach (string alt in alts) {
+					//Console.WriteLine($"Registering command alias {alt}");
+					try {
+						CommandManager.RegisterCommand(alt, cmd.RedirectHacknetInvocation);
+						RegisteredCommands[alt.ToLower()] = cmd;
+					}
+					catch (NotImplementedException ex) {
+						Console.WriteLine($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
 					}
 				}
-			}
-			catch (Exception ex) {
-				Console.WriteLine($"Error registering command: {ex.GetType().Name}: {ex.Message}");
-				Console.WriteLine(ex.StackTrace);
 			}
 		}
 
 		Console.WriteLine("Finished registering custom game commands");
-
 		return true;
-	}
-
-	private static void invokeCommand(OS os, string[] argv) {
-		if (commands.TryGetValue(argv[0].ToLower(), out CommandData cmd)) {
-			string arg0 = argv[0];
-			string[] args = argv.Skip(1).ToArray();
-
-			if (cmd.Arguments is not null) {
-				if (args.Length > cmd.Arguments.MaxArguments || args.Length < cmd.Arguments.RequiredArguments) {
-					os.write("Invalid usage (argument count mismatch)");
-					os.write($"Usage: {cmd.PrettyName} {cmd.Arguments.ArgumentDescription}".Trim());
-					return;
-				}
-			}
-
-			try {
-				cmd.Handler.Invoke(os, arg0, args);
-			}
-			catch (Exception ex) {
-				os.write($"Foxnet command error: {ex.GetType().Name}\n{ex.Message}");
-				os.write(ex.StackTrace);
-			}
-
-		}
-		else {
-			os.write("Foxnet core error: command not found");
-		}
 	}
 
 	public static string GetMagicFromExeName(string fileName) {
