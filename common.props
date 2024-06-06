@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<OutputType>Library</OutputType>
+		<RootNamespace>PrincessRTFM.Hacknet.$(Product)</RootNamespace>
+		<AssemblyName>$(Product)</AssemblyName>
+		<TargetFramework>net4.7.2</TargetFramework>
+		<FileAlignment>512</FileAlignment>
+		<Deterministic>true</Deterministic>
+		<Nullable>enable</Nullable>
+		<NullableContextOptions>enable</NullableContextOptions>
+		<LangVersion>12</LangVersion>
+		<PlatformTarget>x86</PlatformTarget>
+	</PropertyGroup>
+
+	<Choose>
+		<When Condition=" '$(Configuration.ToLower())' == 'debug' ">
+			<PropertyGroup>
+				<DebugSymbols>true</DebugSymbols>
+				<DebugType>embedded</DebugType>
+				<Optimize>false</Optimize>
+				<CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
+				<DefineConstants>DEBUG;TRACE</DefineConstants>
+				<SourceRevisionId Condition=" '$(SourceRevisionId)' != '' ">$(SourceRevisionId).debug</SourceRevisionId>
+				<SourceRevisionId Condition=" '$(SourceRevisionId)' == '' ">debug</SourceRevisionId>
+			</PropertyGroup>
+		</When>
+		<When Condition=" '$(Configuration.ToLower())' == 'stripped' ">
+			<PropertyGroup>
+				<DebugSymbols>false</DebugSymbols>
+				<DebugType>none</DebugType>
+				<Optimize>true</Optimize>
+				<CopyDebugSymbolFilesFromPackages>false</CopyDebugSymbolFilesFromPackages>
+				<DefineConstants>RELEASE;STRIPPED</DefineConstants>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<DebugSymbols>true</DebugSymbols>
+				<DebugType>portable</DebugType>
+				<Optimize>true</Optimize>
+				<CopyDebugSymbolFilesFromPackages>false</CopyDebugSymbolFilesFromPackages>
+				<DefineConstants>RELEASE;TRACE</DefineConstants>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<ItemGroup>
+		<Reference Include="0Harmony">
+		  <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\0Harmony.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="BepInEx.Core">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\BepInEx.Core.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="BepInEx.Hacknet">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\BepInEx.Hacknet.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="FNA">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\FNA.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Hacknet">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\Hacknet.exe</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="PathfinderAPI">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\plugins\PathfinderAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Xml.Linq" />
+		<Reference Include="System.Data.DataSetExtensions" />
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Net.Http" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove=".gitignore" />
+		<None Remove="README.md" />
+		<None Remove="LICENSE" />
+	</ItemGroup>
+
+</Project>
