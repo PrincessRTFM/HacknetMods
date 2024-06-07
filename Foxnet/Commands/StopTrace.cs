@@ -17,5 +17,10 @@ internal class StopTrace: CommandBase {
 			os.TraceDangerSequence.percentComplete = 0;
 			os.write("ETAS terminated");
 		}
+		if (os.TrackersInProgress.Count > 0) {
+			int trackers = os.TrackersInProgress.Count;
+			os.TrackersInProgress.Clear();
+			os.write($"Killed {trackers} tracker{(trackers == 1 ? "" : "s")}");
+		}
 	}
 }
