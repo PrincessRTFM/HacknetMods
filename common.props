@@ -73,6 +73,30 @@
 			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\plugins\PathfinderAPI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="Mono.Cecil">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\Mono.Cecil.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Mono.Cecil.Rocks">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\Mono.Cecil.Rocks.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="MonoMod.RuntimeDetour">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="MonoMod.Utils">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\MonoMod.Utils.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SemanticVersioning">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\SemanticVersioning.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="System.Memory">
+			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\System.Memory.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="System" />
 		<Reference Include="System.Core" />
 		<Reference Include="System.Xml.Linq" />
