@@ -26,6 +26,7 @@ internal class SetTotalRam: CommandBase {
 			else {
 				os.totalRam += diff;
 				os.ramAvaliable += diff;
+				Foxnet.PrintRandomSnark(os);
 			}
 		}
 		else {

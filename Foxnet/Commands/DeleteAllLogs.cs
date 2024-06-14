@@ -8,7 +8,12 @@ internal class DeleteAllLogs: CommandBase {
 	public override string[] Arguments { get; } = [];
 
 	public override void Execute(OS os, string cmd, string[] args) {
-		os.connectedComp?.files?.root?.searchForFolder("log")?.files?.Clear();
-		os.write(os.connectedComp is null ? "Not connected, no logs to delete" : "Wiped all logs");
+		if (os.connectedComp is not Computer c) {
+			os.write("Not connected, no logs to delete");
+			return;
+		}
+		c.files?.root?.searchForFolder("log")?.files?.Clear();
+		os.write("Wiped all logs");
+		Foxnet.PrintRandomSnark(os);
 	}
 }

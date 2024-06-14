@@ -5,6 +5,7 @@ using System.Reflection;
 
 using BepInEx;
 using BepInEx.Hacknet;
+using BepInEx.Logging;
 
 using Hacknet;
 
@@ -18,11 +19,12 @@ public class Foxnet: HacknetPlugin {
 	public const string
 		GUID = $"PrincessRTFM.{NAME}",
 		NAME = "Foxnet",
-		VERSION = "1.0.0";
+		VERSION = "0.1.0";
 
 	internal delegate void PluginCommandDelegate(OS os, string cmd, string[] args);
 
 	internal static Dictionary<string, CommandBase> RegisteredCommands { get; private set; } = [];
+	private static ManualLogSource logger { get; set; } = null!;
 
 	private static readonly Dictionary<string, string> exeFileCache = [];
 
@@ -71,8 +73,34 @@ public class Foxnet: HacknetPlugin {
 
 	public static string Snark => snark[Utils.random.Next(0, snark.Length)];
 
+	private static void emitLogMessage(object _, LogEventArgs e) {
+		Console.ForegroundColor = e.Level switch {
+			//LogLevel.None => throw new NotImplementedException(),
+			LogLevel.Fatal => ConsoleColor.DarkRed,
+			LogLevel.Error => ConsoleColor.Red,
+			LogLevel.Warning => ConsoleColor.Yellow,
+			LogLevel.Message => ConsoleColor.Green,
+			LogLevel.Info => ConsoleColor.Blue,
+			LogLevel.Debug => ConsoleColor.Cyan,
+			//LogLevel.All => throw new NotImplementedException(),
+			_ => Console.ForegroundColor,
+		};
+		Console.WriteLine(e.Data);
+		Console.ResetColor();
+	}
+
+	internal static void Fatal(string msg) => logger.LogFatal(msg);
+	internal static void Error(string msg) => logger.LogError(msg);
+	internal static void Warn(string msg) => logger.LogWarning(msg);
+	internal static void Print(string msg) => logger.LogMessage(msg);
+	internal static void Info(string msg) => logger.LogInfo(msg);
+	internal static void Debug(string msg) => logger.LogDebug(msg);
+
 	public override bool Load() {
-		Console.WriteLine("Applying harmony patches");
+		//this.Log.LogEvent += emitLogMessage;
+		logger = this.Log;
+
+		Info("Applying harmony patches");
 		this.HarmonyInstance.PatchAll(this.GetType().Assembly);
 
 		Type cmdBase = typeof(CommandBase);
@@ -84,15 +112,16 @@ public class Foxnet: HacknetPlugin {
 			.Cast<CommandBase>()
 			.ToArray();
 
-		Console.WriteLine($"Registering {commands.Length} custom game commands");
+		Info($"Registering {commands.Length} custom game commands");
 		foreach (CommandBase cmd in commands) {
 			//Console.WriteLine($"Registering custom command {cmd.Command} from {cmd.GetType().Name}");
+			RegisteredCommands[cmd.GetType().Name] = cmd;
 			try {
 				CommandManager.RegisterCommand(cmd.Command, cmd.RedirectHacknetInvocation);
-				RegisteredCommands[cmd.Command.ToLower()] = cmd;
+				RegisteredCommands[cmd.Command] = cmd;
 			}
 			catch (NotImplementedException ex) {
-				Console.WriteLine($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
+				Warn($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
 			}
 
 			string[] alts = cmd.Aliases;
@@ -104,14 +133,19 @@ public class Foxnet: HacknetPlugin {
 						RegisteredCommands[alt.ToLower()] = cmd;
 					}
 					catch (NotImplementedException ex) {
-						Console.WriteLine($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
+						Warn($"Ignoring {ex.GetType().Name} ({ex.Message}) and crossing our fingers...");
 					}
 				}
 			}
 		}
 
-		Console.WriteLine("Finished registering custom game commands");
+		Info("Finished registering custom game commands");
 		return true;
+	}
+	public override bool Unload() {
+		this.Log.LogEvent -= emitLogMessage;
+		logger = null!;
+		return base.Unload();
 	}
 
 	public static string GetMagicFromExeName(string fileName) {
@@ -127,5 +161,14 @@ public class Foxnet: HacknetPlugin {
 
 		return exeFileCache[wanted] = null!;
 	}
+
+	public static void PrintRandomSnark(OS os, bool includeNewlinePrefix = true) {
+		if (includeNewlinePrefix)
+			os.write("\n");
+		foreach (string line in Snark.Split('\n'))
+			os.write($"// {line}");
+		os.write("\n");
+	}
+	public static void PrintRandomSnark(bool includeNewlinePrefix = true) => PrintRandomSnark(OS.currentInstance, includeNewlinePrefix);
 
 }

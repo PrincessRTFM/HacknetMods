@@ -15,6 +15,7 @@ internal class BypassProxy: CommandBase {
 				c.proxyOverloadTicks = 0;
 				c.proxyActive = false;
 				os.write("Proxy disabled");
+				Foxnet.PrintRandomSnark(os);
 			}
 			else {
 				os.write("No proxy present");

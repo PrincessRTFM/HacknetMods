@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using Hacknet;
 
@@ -12,7 +13,6 @@ internal class Examine: CommandBase {
 
 	public override void Execute(OS os, string cmd, string[] args) {
 		const string none = "[n/a]";
-		const double delay = 0.2;
 
 		Computer c = args.Length > 0
 			? Programs.getComputer(os, args[0])
@@ -105,7 +105,7 @@ internal class Examine: CommandBase {
 			if (string.IsNullOrEmpty(name))
 				name = none;
 
-			List<string> rawLines = new([
+			List<string> lines = new([
 				$"State of {ip}/{id}: {name}",
 				$"Current admin: {owner} ({pass})",
 				$"Admin access: {(isAdmin ? "" : "not ")}available",
@@ -118,10 +118,10 @@ internal class Examine: CommandBase {
 			]);
 
 			if (ports.Count < needed) {
-				rawLines.Add("This computer cannot be hacked!");
+				lines.Add("This computer cannot be hacked!");
 			}
 			else if (ports.Count == 0) {
-				rawLines.Add("This computer can always be hacked.");
+				lines.Add("This computer can always be hacked.");
 			}
 			else if (ports.Count > 0) {
 				Folder bin = os.thisComputer.files.root.searchForFolder("bin");
@@ -146,35 +146,29 @@ internal class Examine: CommandBase {
 
 				if (canOpen < c.GetRealPortsNeededForCrack()) {
 					int missing = c.GetRealPortsNeededForCrack() - canOpen;
-					rawLines.Add($"You cannot currently hack this computer.");
-					rawLines.Add($"You must open {(missing == 1 ? "1 port" : $"{missing} ports")} more than you have tools for.");
+					lines.Add($"You cannot currently hack this computer.");
+					lines.Add($"You must open {(missing == 1 ? "1 port" : $"{missing} ports")} more than you have tools for.");
 				}
 			}
 
 			if (traceTime > 0)
-				rawLines.Add($"Trace time: {traceTime}s");
+				lines.Add($"Trace time: {traceTime}s");
 			else
-				rawLines.Add("No trace present");
+				lines.Add("No trace present");
 
 			if (tracked)
-				rawLines.Add("Tracker present");
+				lines.Add("Tracker present");
 			else
-				rawLines.Add("No tracker present");
+				lines.Add("No tracker present");
 
-			rawLines.Add($"System memory: {memDesc}");
+			lines.Add($"System memory: {memDesc}");
 
-			List<SlowPrinter.DelayedLine> lines = SlowPrinter.ConstructUniformDelay(delay, rawLines.ToArray());
+			lines.Add("\n");
+			lines.AddRange(Foxnet.Snark.Split('\n').Select(l => $"// {l}"));
+			lines.Add("\n");
 
-			lines.Add(new(0.5, "\n"));
-
-			string[] taglines = Foxnet.Snark.Split('\n');
-			foreach (string tagline in taglines) {
-				lines.Add(new(1, $"// {tagline}"));
-			}
-
-			lines.Add(new(0.5, "\n"));
-
-			SlowPrinter.SlowPrint(os, lines.ToArray());
+			foreach (string line in lines)
+				os.write(line);
 		}
 		else {
 			os.write("Target computer not found");

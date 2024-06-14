@@ -13,6 +13,7 @@ internal class CleanDisconnect: CommandBase {
 			Programs.disconnect(["disconnect"], os);
 			remote.files?.root?.searchForFolder("log")?.files?.Clear();
 			os.write($"Wiped remote logs on {remote.ip}");
+			Foxnet.PrintRandomSnark(os);
 		}
 	}
 }

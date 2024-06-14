@@ -20,5 +20,6 @@ internal class ToggleStealthMode: CommandBase {
 				break;
 		}
 		os.write($"Your logs are{(Hooks.BlockComputerLogs ? "" : " not")} being blocked");
+		Foxnet.PrintRandomSnark(os);
 	}
 }

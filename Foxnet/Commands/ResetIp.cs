@@ -23,5 +23,6 @@ internal class ResetIp: CommandBase {
 		if (isConnected)
 			os.connectedIP = c.ip;
 		os.write($"Changed target machine's IP to {c.ip}");
+		Foxnet.PrintRandomSnark(os);
 	}
 }

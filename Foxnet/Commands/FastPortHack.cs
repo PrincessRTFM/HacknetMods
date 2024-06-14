@@ -41,6 +41,8 @@ internal class FastPortHack: CommandBase {
 
 			os.takeAdmin();
 			os.write("Admin access granted");
+
+			Foxnet.PrintRandomSnark(os);
 		}
 	}
 }

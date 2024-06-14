@@ -45,6 +45,7 @@ internal class ResetSecurity: CommandBase {
 				os.write("No proxy present");
 			}
 
+			Foxnet.PrintRandomSnark(os);
 		}
 		else {
 			os.write("Target computer not found");

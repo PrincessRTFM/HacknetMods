@@ -15,6 +15,7 @@ internal class ResetProxy: CommandBase {
 				c.proxyOverloadTicks = c.startingOverloadTicks;
 				c.proxyActive = true;
 				os.write("Proxy enabled");
+				Foxnet.PrintRandomSnark(os);
 			}
 			else {
 				os.write("No proxy present");

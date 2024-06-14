@@ -8,19 +8,26 @@ internal class StopTrace: CommandBase {
 	public override string[] Arguments { get; } = [];
 
 	public override void Execute(OS os, string cmd, string[] args) {
+		bool worked = false;
 		if (os.traceTracker.active) {
 			os.traceTracker.stop();
 			os.write("Killed current trace");
+			worked = true;
 		}
 		if (os.TraceDangerSequence.IsActive) {
 			os.TraceDangerSequence.CancelTraceDangerSequence();
 			os.TraceDangerSequence.percentComplete = 0;
 			os.write("ETAS terminated");
+			worked = true;
 		}
 		if (os.TrackersInProgress.Count > 0) {
 			int trackers = os.TrackersInProgress.Count;
 			os.TrackersInProgress.Clear();
 			os.write($"Killed {trackers} tracker{(trackers == 1 ? "" : "s")}");
+			worked = true;
 		}
+
+		if (worked)
+			Foxnet.PrintRandomSnark(os);
 	}
 }

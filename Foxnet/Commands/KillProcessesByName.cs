@@ -31,15 +31,15 @@ internal class KillProcessesByName: CommandBase {
 				names[2] = custom.Args[0];
 			else
 				names[2] = string.Empty; // TODO find a way to get this from base game exes
-			Console.Write($"PID {exe.PID}: name=[{names[0]}] IdentifierName=[{names[1]}] arg0=[{names[2]}] - ");
+			string debug = $"PID {exe.PID}: name=[{names[0]}] IdentifierName=[{names[1]}] arg0=[{names[2]}] - ";
 			if (names.Any(n => exact ? n.ToLower().Equals(target) : n.ToLower().Contains(target))) {
-				Console.WriteLine("MATCH");
+				Foxnet.Debug(debug + "MATCH");
 				exe.Kill();
 				os.write($"Killed {exe.IdentifierName ?? exe.name} ({exe.PID})");
 				found = true;
 			}
 			else {
-				Console.WriteLine("NO MATCH");
+				Foxnet.Debug(debug + "NO MATCH");
 			}
 		}
 		if (!found)
