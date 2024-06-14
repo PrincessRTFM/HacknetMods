@@ -9,6 +9,7 @@ using Hacknet;
 
 using HarmonyLib;
 
+using Pathfinder;
 using Pathfinder.Port;
 using Pathfinder.Util;
 
@@ -132,33 +133,23 @@ public static class Hooks {
 	#region Allow `connect`ing to nodes by ID
 
 	[HarmonyPrefix]
+	[HarmonyBefore(PathfinderAPIPlugin.ModGUID)]
+	[HarmonyPatch(typeof(Programs), nameof(Programs.scan))]
 	[HarmonyPatch(typeof(Programs), nameof(Programs.connect))]
-	private static void ConnectToComputerById(ref string[] args, OS os) {
+	private static void ScanOrConnectById(ref string[] args) {
 		if (args.Length < 2)
 			return;
-		Computer found = Programs.getComputer(os, args[1]);
+
+		Computer found = ComputerLookup.FindById(args[1]);
 		if (found is null)
 			return;
+
 		args[1] = found.ip;
 	}
 
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(Programs), nameof(Programs.computerExists))]
 	private static void CheckComputerExistenceById(string ip, ref bool __result) => __result = __result || (ComputerLookup.FindById(ip) is not null);
-
-	[HarmonyPrefix]
-	[HarmonyPatch(typeof(Programs), nameof(Programs.scan))]
-	private static void ScanComputerById(string[] args, OS os) {
-		if (args.Length < 2)
-			return;
-
-		Computer computer = ComputerLookup.FindById(args[1]);
-		if (computer is null)
-			return;
-
-		os.netMap.discoverNode(computer);
-		os.write("Found Terminal : " + computer.name + "@" + computer.ip);
-	}
 
 	#endregion
 
