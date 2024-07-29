@@ -16,6 +16,14 @@
 		<PlatformTarget>x86</PlatformTarget>
 	</PropertyGroup>
 
+	<Target Name="GenerateUsableLibDirectory" AfterTargets="Build">
+		<PropertyGroup Condition=" '$(BaseOutputPath)' != '' ">
+			<ZipOutputFile>$(BaseOutputPath)\$(Configuration).zip</ZipOutputFile>
+		</PropertyGroup>
+		<Error Condition=" '$(ZipOutputFile)' == '' " Text="ZipOutputFile is not known, cannot create zipfile" />
+		<ZipDirectory SourceDirectory="$(TargetDir)" DestinationFile="$(ZipOutputFile)" />
+	</Target>
+
 	<Choose>
 		<When Condition=" '$(Configuration.ToLower())' == 'debug' ">
 			<PropertyGroup>
@@ -50,7 +58,9 @@
 
 	<ItemGroup Condition=" $(Product) != 'Libsune.Hacknet' ">
 
-		<ProjectReference Include="..\Libsune.Hacknet\Libsune.Hacknet.csproj" />
+		<ProjectReference Include="..\Libsune.Hacknet\Libsune.Hacknet.csproj">
+			<Private>False</Private>
+		</ProjectReference>
 
 	</ItemGroup>
 
