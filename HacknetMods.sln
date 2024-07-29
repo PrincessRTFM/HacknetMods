@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackdoorExploit", "Backdoor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShowPID", "ShowPID\ShowPID.csproj", "{55D975E4-B24A-4C24-BC58-294FFE1E7E67}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Libsune.Hacknet", "Libsune.Hacknet\Libsune.Hacknet.csproj", "{BF24C186-1188-4251-8445-4A772AFEF708}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{55D975E4-B24A-4C24-BC58-294FFE1E7E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55D975E4-B24A-4C24-BC58-294FFE1E7E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55D975E4-B24A-4C24-BC58-294FFE1E7E67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF24C186-1188-4251-8445-4A772AFEF708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF24C186-1188-4251-8445-4A772AFEF708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF24C186-1188-4251-8445-4A772AFEF708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF24C186-1188-4251-8445-4A772AFEF708}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
