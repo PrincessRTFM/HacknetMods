@@ -4,6 +4,8 @@ using Hacknet;
 
 using Pathfinder.Port;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class InstantHack: CommandBase {
@@ -16,7 +18,7 @@ internal class InstantHack: CommandBase {
 			List<PortState> ports = c.GetAllPortStates();
 
 			if (c.GetRealPortsNeededForCrack() > ports.Count) {
-				os.write("Cannot bypass: more ports are needed to crack than are available");
+				os.Print("Cannot bypass: not enough ports available to crack");
 				return;
 			}
 
@@ -46,15 +48,15 @@ internal class InstantHack: CommandBase {
 				if (canOpen.Count < c.GetRealPortsNeededForCrack()) {
 					int needed = c.GetRealPortsNeededForCrack() - canOpen.Count;
 					if (cannotOpen.Count > 1) {
-						os.write("Cannot bypass: unable to open the following ports:");
+						os.Print("Cannot bypass: unable to open the following ports:");
 						foreach (PortState blocked in cannotOpen)
-							os.write($"- {blocked.DisplayName} ({blocked.Record.Protocol}, {blocked.PortNumber})");
+							os.Print($"- {blocked.DisplayName} ({blocked.Record.Protocol}, {blocked.PortNumber})");
 					}
 					else if (cannotOpen.Count == 1) {
 						PortState blocked = cannotOpen[0];
-						os.write($"Cannot bypass: unable to open {blocked.DisplayName} ({blocked.Record.Protocol}, {blocked.PortNumber})");
+						os.Print($"Cannot bypass: unable to open {blocked.DisplayName} ({blocked.Record.Protocol}, {blocked.PortNumber})");
 					}
-					os.write($"At least {needed} more port{(needed == 1 ? "" : "s")} must be opened than you have crushers for");
+					os.Print($"At least {needed} more port{(needed == 1 ? "" : "s")} must be opened than you have crushers for");
 					return;
 				}
 			}

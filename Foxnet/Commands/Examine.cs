@@ -5,6 +5,8 @@ using Hacknet;
 
 using Pathfinder.Port;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class Examine: CommandBase {
@@ -164,14 +166,14 @@ internal class Examine: CommandBase {
 			lines.Add($"System memory: {memDesc}");
 
 			lines.Add("\n");
-			lines.AddRange(Foxnet.Snark.Split('\n').Select(l => $"// {l}"));
+			lines.AddRange(Foxnet.Snark);
 			lines.Add("\n");
 
 			foreach (string line in lines)
-				os.write(line);
+				os.Print(line);
 		}
 		else {
-			os.write("Target computer not found");
+			os.Print("Target computer not found");
 		}
 	}
 }

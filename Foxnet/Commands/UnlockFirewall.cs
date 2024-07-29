@@ -1,6 +1,6 @@
-using System;
-
 using Hacknet;
+
+using PrincessRTFM.Hacknet.Lib;
 
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
@@ -16,11 +16,11 @@ internal class UnlockFirewall: CommandBase {
 			if (c.firewall is not null) {
 				c.firewall.solved = true;
 				c.firewall.analysisPasses = c.firewall.solutionLength;
-				os.write($"Firewall unlocked ({c.firewall.solution ?? "<no solution?>"})");
+				os.Print($"Firewall unlocked ({c.firewall.solution ?? "<no solution?>"})");
 				Foxnet.PrintRandomSnark(os);
 			}
 			else {
-				os.write("No firewall present");
+				os.Print("No firewall present");
 			}
 		}
 	}

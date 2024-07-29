@@ -1,5 +1,7 @@
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class RandomiseFirewallPassword: CommandBase {
@@ -18,10 +20,10 @@ internal class RandomiseFirewallPassword: CommandBase {
 					len = 0;
 				c.firewall.solutionLength = len;
 				c.firewall.generateRandomSolution();
-				os.write($"Firewall password changed to {c.firewall.solution ?? "<no solution?>"}");
+				os.Print($"Firewall password changed to {c.firewall.solution ?? "<no solution?>"}");
 			}
 			else {
-				os.write("No firewall present");
+				os.Print("No firewall present");
 			}
 		}
 	}

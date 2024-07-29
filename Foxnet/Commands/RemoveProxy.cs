@@ -1,5 +1,7 @@
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class RemoveProxy: CommandBase {
@@ -13,10 +15,10 @@ internal class RemoveProxy: CommandBase {
 			if (c.hasProxy) {
 				c.hasProxy = c.proxyActive = false;
 				c.startingOverloadTicks = c.proxyOverloadTicks = 0;
-				os.write("Proxy disabled");
+				os.Print("Proxy disabled");
 			}
 			else {
-				os.write("No proxy present");
+				os.Print("No proxy present");
 			}
 		}
 	}

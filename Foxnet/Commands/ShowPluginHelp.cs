@@ -3,6 +3,8 @@ using System.Linq;
 
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class ShowPluginHelp: CommandBase {
@@ -22,7 +24,7 @@ internal class ShowPluginHelp: CommandBase {
 				lines.AddRange(found.Description.Split('\n').Select(line => $"> {line}"));
 			}
 			else {
-				os.write("No Foxnet command exists with that name");
+				os.Print("No Foxnet command exists with that name");
 				return;
 			}
 		}
@@ -37,10 +39,10 @@ internal class ShowPluginHelp: CommandBase {
 		}
 
 		lines.Add("\n");
-		lines.AddRange(Foxnet.Snark.Split('\n').Select(line => $"// {line}"));
+		lines.AddRange(Foxnet.Snark);
 		lines.Add("\n");
 
 		foreach (string line in lines)
-			os.write(line);
+			os.Print(line);
 	}
 }

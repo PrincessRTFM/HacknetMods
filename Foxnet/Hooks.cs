@@ -13,6 +13,8 @@ using Pathfinder;
 using Pathfinder.Port;
 using Pathfinder.Util;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet;
 
 [HarmonyPatch]
@@ -124,7 +126,7 @@ public static class Hooks {
 			os.display.command = name;
 			os.display.commandArgs = p;
 			os.display.typeChanged();
-			os.write($"Target port auto-selected by Foxnet! ouo >> {os.terminal.lastRunCommand}");
+			os.Print($"Target port auto-selected: {os.terminal.lastRunCommand}");
 		}
 	}
 

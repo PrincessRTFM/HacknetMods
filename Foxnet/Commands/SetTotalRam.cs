@@ -1,5 +1,7 @@
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class SetTotalRam: CommandBase {
@@ -20,8 +22,8 @@ internal class SetTotalRam: CommandBase {
 		else if (diff < 0) { // decreasing max ram - check that there'll be enough left
 			int wouldBeLeft = os.ramAvaliable + diff;
 			if (wouldBeLeft < 0) {
-				os.write($"Cannot set max RAM to {amount}mb: too much is in use");
-				os.write($"You must free at least {-wouldBeLeft}mb of RAM first");
+				os.Print($"Cannot set max RAM to {amount}mb: too much is in use");
+				os.Print($"You must free at least {-wouldBeLeft}mb of RAM first");
 			}
 			else {
 				os.totalRam += diff;
@@ -30,7 +32,7 @@ internal class SetTotalRam: CommandBase {
 			}
 		}
 		else {
-			os.write($"No change - max RAM is already {amount}mb");
+			os.Print($"No change - max RAM is already {amount}mb");
 		}
 		// update module bounds for the visuals
 		os.ram.bounds.Height = os.totalRam + RamModule.contentStartOffset;

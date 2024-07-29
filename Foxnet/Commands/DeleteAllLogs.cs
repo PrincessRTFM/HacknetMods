@@ -1,5 +1,7 @@
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class DeleteAllLogs: CommandBase {
@@ -9,11 +11,11 @@ internal class DeleteAllLogs: CommandBase {
 
 	public override void Execute(OS os, string cmd, string[] args) {
 		if (os.connectedComp is not Computer c) {
-			os.write("Not connected, no logs to delete");
+			os.Print("Not connected, no logs to delete");
 			return;
 		}
 		c.files?.root?.searchForFolder("log")?.files?.Clear();
-		os.write("Wiped all logs");
+		os.Print("Wiped all logs");
 		Foxnet.PrintRandomSnark(os);
 	}
 }

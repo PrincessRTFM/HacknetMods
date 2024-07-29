@@ -11,6 +11,8 @@ using Hacknet;
 
 using Pathfinder.Command;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet;
 
 [BepInPlugin(GUID, NAME, VERSION)]
@@ -71,23 +73,7 @@ public class Foxnet: HacknetPlugin {
 		"Have you taken your happiness pills today, Citizen?\nHappiness is mandatory!",
 	];
 
-	public static string Snark => snark[Utils.random.Next(0, snark.Length)];
-
-	private static void emitLogMessage(object _, LogEventArgs e) {
-		Console.ForegroundColor = e.Level switch {
-			//LogLevel.None => throw new NotImplementedException(),
-			LogLevel.Fatal => ConsoleColor.DarkRed,
-			LogLevel.Error => ConsoleColor.Red,
-			LogLevel.Warning => ConsoleColor.Yellow,
-			LogLevel.Message => ConsoleColor.Green,
-			LogLevel.Info => ConsoleColor.Blue,
-			LogLevel.Debug => ConsoleColor.Cyan,
-			//LogLevel.All => throw new NotImplementedException(),
-			_ => Console.ForegroundColor,
-		};
-		Console.WriteLine(e.Data);
-		Console.ResetColor();
-	}
+	public static string[] Snark => snark[Utils.random.Next(0, snark.Length)].Split(Utils.newlineDelim).Select(l => $"// {l}").ToArray();
 
 	internal static void Fatal(string msg) => logger.LogFatal(msg);
 	internal static void Error(string msg) => logger.LogError(msg);
@@ -97,8 +83,9 @@ public class Foxnet: HacknetPlugin {
 	internal static void Debug(string msg) => logger.LogDebug(msg);
 
 	public override bool Load() {
-		//this.Log.LogEvent += emitLogMessage;
 		logger = this.Log;
+
+		TermLib.TerminalOutputPrefix = "OuO >>";
 
 		Info("Applying harmony patches");
 		this.HarmonyInstance.PatchAll(this.GetType().Assembly);
@@ -143,7 +130,6 @@ public class Foxnet: HacknetPlugin {
 		return true;
 	}
 	public override bool Unload() {
-		this.Log.LogEvent -= emitLogMessage;
 		logger = null!;
 		return base.Unload();
 	}
@@ -165,10 +151,8 @@ public class Foxnet: HacknetPlugin {
 	public static void PrintRandomSnark(OS os, bool includeNewlinePrefix = true) {
 		if (includeNewlinePrefix)
 			os.write("\n");
-		foreach (string line in Snark.Split('\n'))
-			os.write($"// {line}");
+		os.Print(Snark);
 		os.write("\n");
 	}
-	public static void PrintRandomSnark(bool includeNewlinePrefix = true) => PrintRandomSnark(OS.currentInstance, includeNewlinePrefix);
 
 }

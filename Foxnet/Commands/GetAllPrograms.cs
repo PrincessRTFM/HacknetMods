@@ -5,6 +5,7 @@ using System.Linq;
 using Hacknet;
 
 using PrincessRTFM.Hacknet.Foxnet.Util;
+using PrincessRTFM.Hacknet.Lib;
 
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
@@ -31,13 +32,13 @@ internal class GetAllPrograms: CommandBase {
 			}
 		}
 		catch (Exception e) {
-			os.write($"Failed to reflect into custom executable manager");
-			os.write($"{e.GetType().Name}:\n{e.Message}");
-			os.write("Cannot provide custom executables");
+			os.Print($"Failed to reflect into custom executable manager");
+			os.Print($"{e.GetType().Name}:\n{e.Message}");
+			os.Print("Cannot provide custom executables");
 		}
 		bin.files.AddRange(files);
-		os.write($"Added {files.Count} program{(files.Count == 1 ? "" : "s")} to your /bin folder.");
+		os.Print($"Added {files.Count} program{(files.Count == 1 ? "" : "s")} to your /bin folder.");
 		if (files.Count > 0 && cmd == "xmas")
-			os.write("Ho ho ho, ya naughty fuck.");
+			os.Print("Ho ho ho, ya naughty fuck.");
 	}
 }

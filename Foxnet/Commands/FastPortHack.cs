@@ -2,6 +2,8 @@ using Hacknet;
 
 using Pathfinder.Port;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class FastPortHack: CommandBase {
@@ -21,26 +23,26 @@ internal class FastPortHack: CommandBase {
 				}
 
 				if (opened < c.GetRealPortsNeededForCrack()) {
-					os.write("Not enough ports open");
+					os.Print("Not enough ports open");
 					return;
 				}
 			}
 
 			if (c.hasProxy && c.proxyActive) {
-				os.write("Proxy still active");
+				os.Print("Proxy still active");
 				return;
 			}
 
 			if (c.firewall is not null && !c.firewall.solved) {
-				os.write("Firewall still active");
+				os.Print("Firewall still active");
 				return;
 			}
 
 			c.userLoggedIn = true;
-			os.write("Logged in");
+			os.Print("Logged in");
 
 			os.takeAdmin();
-			os.write("Admin access granted");
+			os.Print("Admin access granted");
 
 			Foxnet.PrintRandomSnark(os);
 		}

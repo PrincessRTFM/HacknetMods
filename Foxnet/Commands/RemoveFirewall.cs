@@ -2,6 +2,8 @@ using System;
 
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class RemoveFirewall: CommandBase {
@@ -15,10 +17,10 @@ internal class RemoveFirewall: CommandBase {
 
 			if (c.firewall is not null) {
 				c.firewall = null;
-				os.write($"Firewall removed");
+				os.Print($"Firewall removed");
 			}
 			else {
-				os.write("No firewall present");
+				os.Print("No firewall present");
 			}
 		}
 	}

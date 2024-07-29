@@ -1,5 +1,7 @@
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class LoseAdminAccess: CommandBase {
@@ -10,14 +12,14 @@ internal class LoseAdminAccess: CommandBase {
 	public override void Execute(OS os, string cmd, string[] args) {
 		if (os.connectedComp is not null) {
 			if (os.connectedComp.ip == os.thisComputer.ip) {
-				os.write("Cannot lose admin on your own computer");
+				os.Print("Cannot lose admin on your own computer");
 			}
 			else if (os.connectedComp.PlayerHasAdminPermissions()) {
 				os.connectedComp.adminIP = os.connectedComp.ip;
-				os.write("Admin access lost");
+				os.Print("Admin access lost");
 			}
 			else {
-				os.write("You aren't an admin");
+				os.Print("You aren't an admin");
 			}
 		}
 	}

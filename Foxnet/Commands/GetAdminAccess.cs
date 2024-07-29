@@ -1,5 +1,7 @@
 using Hacknet;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class GetAdminAccess: CommandBase {
@@ -11,10 +13,10 @@ internal class GetAdminAccess: CommandBase {
 		if (os.connectedComp is not null) {
 			if (os.connectedComp.userLoggedIn) {
 				os.takeAdmin();
-				os.write("Admin access granted");
+				os.Print("Admin access granted");
 			}
 			else {
-				os.write("You aren't logged in (did you want 'bypass' instead?)");
+				os.Print("You aren't logged in (did you want 'bypass' instead?)");
 			}
 		}
 	}

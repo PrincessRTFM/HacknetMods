@@ -2,6 +2,8 @@ using Hacknet;
 
 using Pathfinder.Port;
 
+using PrincessRTFM.Hacknet.Lib;
+
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class OpenAllPorts: CommandBase {
@@ -21,11 +23,11 @@ internal class OpenAllPorts: CommandBase {
 
 				hadPorts = true;
 				port.SetCracked(true, source);
-				os.write($"Opened {port.DisplayName} port ({port.Record.Protocol}, {port.PortNumber})");
+				os.Print($"Opened {port.DisplayName} port ({port.Record.Protocol}, {port.PortNumber})");
 			}
 
 			if (!hadPorts)
-				os.write("No ports to open");
+				os.Print("No ports to open");
 		}
 	}
 }
