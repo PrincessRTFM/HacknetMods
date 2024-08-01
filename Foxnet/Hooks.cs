@@ -13,8 +13,6 @@ using Pathfinder;
 using Pathfinder.Port;
 using Pathfinder.Util;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet;
 
 [HarmonyPatch]
@@ -68,17 +66,22 @@ public static class Hooks {
 	[HarmonyPrefix]
 	[HarmonyPatch(typeof(ProgramRunner), nameof(ProgramRunner.AttemptExeProgramExecution))]
 	private static void InjectPortArguments(OS os, ref string[] p) {
+		if (!AutoSelectPorts) // if the hook is inactive, abort
+			return;
 		if (os.connectedComp is not Computer remote) // if not connected to a target, abort
 			return;
+
 		string name = p[0];
 		string[] args = p.Skip(1).ToArray();
 		if (args.Length > 0) // if any arguments were passed, abort
 			return;
+
 		Computer local = os.thisComputer;
 		Folder bin = local.files.root.searchForFolder("bin");
 		int fileIndexOfExeProgram = ProgramRunner.GetFileIndexOfExeProgram(name, bin);
 		if (fileIndexOfExeProgram == int.MaxValue || fileIndexOfExeProgram < 0 || fileIndexOfExeProgram > bin.files.Count) // if the thing being run isn't a "real" program, abort
 			return;
+
 		string magic = bin.files[fileIndexOfExeProgram].data;
 		int progId = -1;
 		foreach (int exeNum in PortExploits.exeNums) {
@@ -87,10 +90,13 @@ public static class Hooks {
 				break;
 			}
 		}
+
 		if (progId < 0) // if there's no program ID, abort (because we can't find the target port from custom stuff)
 			return;
+
 		if (progId == 211) // FTPSprint -> FTPBounce
 			progId = 21;
+
 		if (!PortExploits.needsPort[progId]) // if the program doesn't use a target port, abort (nothing to do)
 			return;
 
@@ -125,8 +131,7 @@ public static class Hooks {
 			os.terminal.lastRunCommand = string.Join(" ", p);
 			os.display.command = name;
 			os.display.commandArgs = p;
-			os.display.typeChanged();
-			os.Print($"Target port auto-selected: {os.terminal.lastRunCommand}");
+			Foxnet.Libsune.Terminal.Print($"Target port auto-selected: {os.terminal.lastRunCommand}");
 		}
 	}
 

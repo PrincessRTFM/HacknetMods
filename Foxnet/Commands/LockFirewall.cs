@@ -1,7 +1,5 @@
 using Hacknet;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class LockFirewall: CommandBase {
@@ -16,10 +14,10 @@ internal class LockFirewall: CommandBase {
 			if (c.firewall is not null) {
 				c.firewall.solved = false;
 				c.firewall.resetSolutionProgress();
-				os.Print($"Firewall locked ({c.firewall.solution ?? "<no solution?>"})");
+				Foxnet.Libsune.Terminal.Print($"Firewall locked ({c.firewall.solution ?? "<no solution?>"})");
 			}
 			else {
-				os.Print("No firewall present");
+				Foxnet.Libsune.Terminal.Print("No firewall present");
 			}
 		}
 	}

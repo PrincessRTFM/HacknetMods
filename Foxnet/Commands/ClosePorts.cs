@@ -5,18 +5,15 @@ using Hacknet;
 
 using Pathfinder.Port;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class ClosePorts: CommandBase {
-	public override string[] Aliases { get; } = ["close"];
 	public override string Description { get; } = "Closes the listed port(s), if active";
 	public override string[] Arguments { get; } = ["ports..."];
 
 	public override void Execute(OS os, string cmd, string[] args) {
 		if (args.Length < 1) {
-			os.Print($"Usage: {cmd} [<port> [<port2>...]]");
+			Foxnet.Libsune.Terminal.Print($"Usage: {cmd} [<port> [<port2>...]]");
 			return;
 		}
 		if (os.connectedComp is not null) {
@@ -34,7 +31,7 @@ internal class ClosePorts: CommandBase {
 			foreach (PortState port in c.GetAllPortStates()) {
 				if (ports.Contains(port.PortNumber) && port.Cracked) {
 					port.SetCracked(false, me);
-					os.Print($"Closed port {port.PortNumber} ({port.DisplayName})");
+					Foxnet.Libsune.Terminal.Print($"Closed port {port.PortNumber} ({port.DisplayName})");
 				}
 			}
 		}

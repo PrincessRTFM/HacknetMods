@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 
 using Hacknet;
 
 using Pathfinder.Port;
-
-using PrincessRTFM.Hacknet.Lib;
 
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
@@ -169,11 +166,10 @@ internal class Examine: CommandBase {
 			lines.AddRange(Foxnet.Snark);
 			lines.Add("\n");
 
-			foreach (string line in lines)
-				os.Print(line);
+			Foxnet.Libsune.Terminal.Print(lines.ToArray());
 		}
 		else {
-			os.Print("Target computer not found");
+			Foxnet.Libsune.Terminal.Print("Target computer not found");
 		}
 	}
 }

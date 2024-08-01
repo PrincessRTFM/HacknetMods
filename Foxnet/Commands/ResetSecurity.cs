@@ -2,8 +2,6 @@ using Hacknet;
 
 using Pathfinder.Port;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class ResetSecurity: CommandBase {
@@ -25,32 +23,32 @@ internal class ResetSecurity: CommandBase {
 
 				hadPorts = true;
 				port.SetCracked(false, source);
-				os.Print($"Closed {port.DisplayName} port ({port.Record.Protocol}, {port.PortNumber})");
+				Foxnet.Libsune.Terminal.Print($"Closed {port.DisplayName} port ({port.Record.Protocol}, {port.PortNumber})");
 			}
 
 			if (!hadPorts)
-				os.Print("No ports to close");
+				Foxnet.Libsune.Terminal.Print("No ports to close");
 
 			if (c.firewall is not null) {
 				c.firewall.solved = false;
-				os.Print($"Firewall locked ({c.firewall.solution ?? "<no solution?>"})");
+				Foxnet.Libsune.Terminal.Print($"Firewall locked ({c.firewall.solution ?? "<no solution?>"})");
 			}
 			else {
-				os.Print("No firewall present");
+				Foxnet.Libsune.Terminal.Print("No firewall present");
 			}
 
 			if (c.hasProxy) {
 				c.proxyActive = true;
-				os.Print("Proxy enabled");
+				Foxnet.Libsune.Terminal.Print("Proxy enabled");
 			}
 			else {
-				os.Print("No proxy present");
+				Foxnet.Libsune.Terminal.Print("No proxy present");
 			}
 
 			Foxnet.PrintRandomSnark(os);
 		}
 		else {
-			os.Print("Target computer not found");
+			Foxnet.Libsune.Terminal.Print("Target computer not found");
 		}
 	}
 }

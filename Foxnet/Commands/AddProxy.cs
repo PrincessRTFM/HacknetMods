@@ -1,7 +1,5 @@
 using Hacknet;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class AddProxy: CommandBase {
@@ -16,14 +14,14 @@ internal class AddProxy: CommandBase {
 				if (float.TryParse(args[0], out float ticks)) {
 					c.hasProxy = c.proxyActive = true;
 					c.startingOverloadTicks = c.proxyOverloadTicks = ticks;
-					os.Print("Proxy added");
+					Foxnet.Libsune.Terminal.Print("Proxy added");
 				}
 				else {
-					os.Print($"Invalid proxy strength '{args[0]}' (must be valid float)");
+					Foxnet.Libsune.Terminal.Print($"Invalid proxy strength '{args[0]}' (must be valid float)");
 				}
 			}
 			else {
-				os.Print("Proxy already present");
+				Foxnet.Libsune.Terminal.Print("Proxy already present");
 			}
 		}
 	}

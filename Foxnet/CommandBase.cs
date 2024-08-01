@@ -32,25 +32,27 @@ internal abstract class CommandBase {
 			return this.cachedUsage;
 		}
 	}
+	public override string ToString() => this.Usage;
+	public static implicit operator string(CommandBase cmd) => cmd.ToString();
 
 	public abstract void Execute(OS os, string cmd, string[] args);
 
 	public void RedirectHacknetInvocation(OS os, string[] argv) {
-		string arg0 = argv[0];
+		string cmd = argv[0];
 		string[] args = argv.Skip(1).ToArray();
 
 		if (args.Length > this.MaxArguments || args.Length < this.RequiredArguments) {
-			os.Print("Invalid usage (argument count mismatch)");
-			os.Print($"Usage: {this.Command} {this.ArgumentDescription}".Trim());
+			Foxnet.Libsune.Terminal.Print("Invalid usage (argument count mismatch)");
+			Foxnet.Libsune.Terminal.Print($"Usage: {this.Usage}");
 			return;
 		}
 
 		try {
-			this.Execute(os, arg0, args);
+			this.Execute(os, cmd, args);
 		}
 		catch (Exception ex) {
-			os.Print($"Foxnet command error in {this.GetType().Name}:\n> {ex.GetType().Name}\n>> {ex.Message}");
-			os.Print(ex.StackTrace);
+			Foxnet.Libsune.Terminal.Print($"Foxnet command error in {this.GetType().Name}:\n> {ex.GetType().Name}\n>> {ex.Message}");
+			Foxnet.Libsune.Terminal.Print(ex.StackTrace);
 		}
 	}
 }

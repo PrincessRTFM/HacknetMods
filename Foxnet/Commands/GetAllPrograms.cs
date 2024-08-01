@@ -4,8 +4,7 @@ using System.Linq;
 
 using Hacknet;
 
-using PrincessRTFM.Hacknet.Foxnet.Util;
-using PrincessRTFM.Hacknet.Lib;
+using Pathfinder.Executable;
 
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
@@ -26,19 +25,19 @@ internal class GetAllPrograms: CommandBase {
 				files.Add(new(magic, exeName));
 		}
 		try {
-			foreach (RegisteredCustomExe ce in RegisteredCustomExe.GetCustomExes()) {
-				if (!progs.Contains(ce.Magic))
-					files.Add(new(ce.Magic, ce.QualifiedTypeName + ".exe"));
+			foreach (ExecutableManager.CustomExeInfo ce in ExecutableManager.AllCustomExes) {
+				if (!progs.Contains(ce.ExeData))
+					files.Add(new(ce.ExeData, ce.ExeType.FullName + ".exe"));
 			}
 		}
 		catch (Exception e) {
-			os.Print($"Failed to reflect into custom executable manager");
-			os.Print($"{e.GetType().Name}:\n{e.Message}");
-			os.Print("Cannot provide custom executables");
+			Foxnet.Libsune.Terminal.Print($"Failed to reflect into custom executable manager");
+			Foxnet.Libsune.Terminal.Print($"{e.GetType().Name}:\n{e.Message}");
+			Foxnet.Libsune.Terminal.Print("Cannot provide custom executables");
 		}
 		bin.files.AddRange(files);
-		os.Print($"Added {files.Count} program{(files.Count == 1 ? "" : "s")} to your /bin folder.");
+		Foxnet.Libsune.Terminal.Print($"Added {files.Count} program{(files.Count == 1 ? "" : "s")} to your /bin folder.");
 		if (files.Count > 0 && cmd == "xmas")
-			os.Print("Ho ho ho, ya naughty fuck.");
+			Foxnet.Libsune.Terminal.Print("Ho ho ho, ya naughty fuck.");
 	}
 }

@@ -1,7 +1,5 @@
 using Hacknet;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class BypassProxy: CommandBase {
@@ -16,11 +14,11 @@ internal class BypassProxy: CommandBase {
 			if (c.hasProxy) {
 				c.proxyOverloadTicks = 0;
 				c.proxyActive = false;
-				os.Print("Proxy disabled");
+				Foxnet.Libsune.Terminal.Print("Proxy disabled");
 				Foxnet.PrintRandomSnark(os);
 			}
 			else {
-				os.Print("No proxy present");
+				Foxnet.Libsune.Terminal.Print("No proxy present");
 			}
 		}
 	}

@@ -1,7 +1,5 @@
 using Hacknet;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class ResetProxy: CommandBase {
@@ -16,11 +14,11 @@ internal class ResetProxy: CommandBase {
 			if (c.hasProxy) {
 				c.proxyOverloadTicks = c.startingOverloadTicks;
 				c.proxyActive = true;
-				os.Print("Proxy enabled");
+				Foxnet.Libsune.Terminal.Print("Proxy enabled");
 				Foxnet.PrintRandomSnark(os);
 			}
 			else {
-				os.Print("No proxy present");
+				Foxnet.Libsune.Terminal.Print("No proxy present");
 			}
 		}
 	}

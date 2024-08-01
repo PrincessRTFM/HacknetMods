@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 using Hacknet;
 
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;

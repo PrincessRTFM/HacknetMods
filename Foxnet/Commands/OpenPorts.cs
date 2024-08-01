@@ -5,8 +5,6 @@ using Hacknet;
 
 using Pathfinder.Port;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class OpenPorts: CommandBase {
@@ -16,7 +14,7 @@ internal class OpenPorts: CommandBase {
 
 	public override void Execute(OS os, string cmd, string[] args) {
 		if (args.Length < 1) {
-			os.Print($"Usage: {cmd} [<port> [<port2>...]]");
+			Foxnet.Libsune.Terminal.Print($"Usage: {cmd} [<port> [<port2>...]]");
 			return;
 		}
 		if (os.connectedComp is not null) {
@@ -34,7 +32,7 @@ internal class OpenPorts: CommandBase {
 			foreach (PortState port in c.GetAllPortStates()) {
 				if (ports.Contains(port.PortNumber) && !port.Cracked) {
 					port.SetCracked(true, me);
-					os.Print($"Opened port {port.PortNumber} ({port.DisplayName})");
+					Foxnet.Libsune.Terminal.Print($"Opened port {port.PortNumber} ({port.DisplayName})");
 				}
 			}
 		}

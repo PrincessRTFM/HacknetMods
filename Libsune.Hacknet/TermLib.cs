@@ -1,25 +1,32 @@
 using System.Linq;
-using System.Reflection;
+
+using BepInEx.Hacknet;
 
 using Hacknet;
 
 namespace PrincessRTFM.Hacknet.Lib;
 
-public static class TermLib {
-	private static string? termWritePrefix = null;
-	public static string TerminalOutputPrefix {
-		get => termWritePrefix ?? Assembly.GetExecutingAssembly().GetName().Name;
-		set => termWritePrefix = value.Trim();
-	}
-	public static void Print(params string[] lines) => OS.currentInstance.Print(lines);
+public class TermLib {
+	private readonly string pluginName;
 
-	public static void Print(this OS os, params string[] lines) {
+	private string? termWritePrefix = null;
+	public string OutputPrefix {
+		get => this.termWritePrefix ?? $"[{this.pluginName}]";
+		set => this.termWritePrefix = value.Trim();
+	}
+
+	internal TermLib(HacknetPlugin plugin) {
+		plugin.Log.LogDebug($"{LibsuneHN.LogTag} Initialising terminal library");
+		this.pluginName = plugin.GetType().Name;
+	}
+
+	public void Print(params string[] lines) => this.Print(OS.currentInstance, lines);
+	public void Print(OS os, params string[] lines) {
 		os ??= OS.currentInstance;
 		if (os is null)
 			return;
 
 		foreach (string line in lines.SelectMany(s => s.Split(Utils.newlineDelim)))
-			os.write($"{termWritePrefix} {line}".Trim());
+			os.write($"{this.termWritePrefix} {line}".Trim());
 	}
-
 }

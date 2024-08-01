@@ -4,8 +4,6 @@ using Hacknet;
 
 using Pathfinder.Executable;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class KillProcessesByName: CommandBase {
@@ -36,7 +34,7 @@ internal class KillProcessesByName: CommandBase {
 			if (names.Any(n => exact ? n.ToLower().Equals(target) : n.ToLower().Contains(target))) {
 				Foxnet.Debug(debug + "MATCH");
 				exe.Kill();
-				os.Print($"Killed {exe.IdentifierName ?? exe.name} ({exe.PID})");
+				Foxnet.Libsune.Terminal.Print($"Killed {exe.IdentifierName ?? exe.name} ({exe.PID})");
 				found = true;
 			}
 			else {
@@ -44,9 +42,9 @@ internal class KillProcessesByName: CommandBase {
 			}
 		}
 		if (!found) {
-			os.Print("No matching processes found");
+			Foxnet.Libsune.Terminal.Print("No matching processes found");
 			if (exact)
-				os.Print("Did you mean fuzzy mode? (Does not use -e)");
+				Foxnet.Libsune.Terminal.Print("Did you mean fuzzy mode? (Does not use -e)");
 		}
 	}
 }

@@ -5,8 +5,6 @@ using Hacknet;
 
 using Pathfinder.Executable;
 
-using PrincessRTFM.Hacknet.Lib;
-
 namespace PrincessRTFM.Hacknet.Foxnet.Commands;
 
 internal class LaunchTraceKill: CommandBase {
@@ -57,7 +55,7 @@ internal class LaunchTraceKill: CommandBase {
 			os.launchExecutable(name, magic, 12); // target port isn't even used in the method, wtf
 		}
 		else {
-			os.Print($"Foxnet error: cannot find internal data for {name}");
+			Foxnet.Libsune.Terminal.Print($"Foxnet error: cannot find internal data for {name}");
 		}
 	}
 }
