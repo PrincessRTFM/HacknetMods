@@ -16,11 +16,12 @@
 		<PlatformTarget>x86</PlatformTarget>
 	</PropertyGroup>
 
-	<Target Name="GenerateUsableLibDirectory" AfterTargets="Build">
+	<Target Name="GenerateZipfilesForRelease" AfterTargets="Build">
 		<PropertyGroup Condition=" '$(BaseOutputPath)' != '' ">
 			<ZipOutputFile>$(BaseOutputPath)\$(Configuration).zip</ZipOutputFile>
 		</PropertyGroup>
 		<Error Condition=" '$(ZipOutputFile)' == '' " Text="ZipOutputFile is not known, cannot create zipfile" />
+		<Delete Files="$(ZipOutputFile)" Condition=" Exists('$(ZipOutputFile)') " />
 		<ZipDirectory SourceDirectory="$(TargetDir)" DestinationFile="$(ZipOutputFile)" />
 	</Target>
 
